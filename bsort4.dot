@@ -1,0 +1,51 @@
+digraph graph_name {
+	ranksep=0.03;
+    graph [compound=true, fontname = "Meiryo UI", style="invis" margin=0, nodesep  = 0.5];
+	rank="same"
+    node [fontname = "Meiryo UI"];
+    edge [fontname = "Meiryo UI"];
+    bgcolor = "#F2F2F2";
+	
+
+	1 [label= "START void bsort(int a[], int n)"shape= box, shape = ellipse  ,style= "solid,filled" fillcolor= "#FFFFFF",color="#000000", width= 3.55714285714286,height= 0.571428571428571];
+	2 [label= "int i, j"shape= box, shape = box ,style= "solid,filled" fillcolor= "#FFFFAA",color="#000000", width= 1.42857142857143,height= 0.285714285714286];
+	3 [label= "for( i = 0; i < n - 1; i++ )"shape= box, shape = polygon,distortion=-.1 ,style= "solid,filled" fillcolor= "#B0F0FF",color="#000000", width= 6,height= 0.333333333333333,fixedsize = true];
+	4 [label= "j = n - 1"shape= box, shape = box ,style= "solid,filled" fillcolor= "#FFFFFF",color="#000000", width= 1.42857142857143,height= 0.285714285714286];
+	5 [label= "j > i"shape= box, shape = diamond ,style= "solid,filled" fillcolor= "#FFFFFF",color="#000000", width= 3.57142857142857,height= 0.571428571428571];
+	6 [label= "a[j - 1] > a[j]"shape= box, shape = diamond ,style= "solid,filled" fillcolor= "#FFFFFF",color="#000000", width= 4.10714285714286,height= 0.571428571428571];
+	7 [label= "int temp = a[j]"shape= box, shape = box ,style= "solid,filled" fillcolor= "#FFFFFF",color="#000000", width= 1.96428571428571,height= 0.285714285714286];
+	8 [label= "a[j] = a[j - 1]"shape= box, shape = box ,style= "solid,filled" fillcolor= "#FFFFFF",color="#000000", width= 1.96428571428571,height= 0.285714285714286];
+	9 [label= "a[j - 1] = temp"shape= box, shape = box ,style= "solid,filled" fillcolor= "#FFFFFF",color="#000000", width= 1.96428571428571,height= 0.285714285714286];
+	10 [label= ""shape= box, shape = point ,style= "solid,filled" fillcolor= "#000000",color="#000000", width= 0.142857142857143,height= 0.142857142857143];
+	18 [label= "for( j = n - 1 - 1 ; j > i; j-- )"shape= box, shape = polygon,distortion=-.1 ,style= "solid,filled" fillcolor= "#A0F0BF",color="#000000", width= 6,height= 0.333333333333333,fixedsize = true];
+	11 [label= "a[j - 1] > a[j]"shape= box, shape = diamond ,style= "solid,filled" fillcolor= "#FFFFFF",color="#000000", width= 4.10714285714286,height= 0.571428571428571];
+	12 [label= "int temp = a[j]"shape= box, shape = box ,style= "solid,filled" fillcolor= "#FFFFFF",color="#000000", width= 1.96428571428571,height= 0.285714285714286];
+	13 [label= "a[j] = a[j - 1]"shape= box, shape = box ,style= "solid,filled" fillcolor= "#FFFFFF",color="#000000", width= 1.96428571428571,height= 0.285714285714286];
+	14 [label= "a[j - 1] = temp"shape= box, shape = box ,style= "solid,filled" fillcolor= "#FFFFFF",color="#000000", width= 1.96428571428571,height= 0.285714285714286];
+	15 [label= ""shape= box, shape = point ,style= "solid,filled" fillcolor= "#000000",color="#000000", width= 0.142857142857143,height= 0.142857142857143];
+	19 [label= ""shape= box, shape = polygon,distortion=.1 ,style= "solid,filled" fillcolor= "#A0F0BF",color="#000000", width= 6,height= 0.333333333333333,fixedsize = true];
+	16 [label= ""shape= box, shape = polygon,distortion=.1 ,style= "solid,filled" fillcolor= "#B0F0FF",color="#000000", width= 6,height= 0.333333333333333,fixedsize = true];
+	17 [label= "END"shape= box, shape = ellipse  ,style= "solid,filled" fillcolor= "#FFFFFF",color="#000000", width= 2,height= 0.571428571428571];
+
+ 1 -> 2 [ label = "",arrowhead  = normal,color = "#000000"];
+ 2 -> 3 [ label = "",arrowhead  = normal,color = "#000000"];
+ 3 -> 4 [ label = "",arrowhead  = normal,color = "#000000"];
+ 4 -> 5 [ label = "",arrowhead  = normal,color = "#000000"];
+ 5 -> 6 [ label = "Yes",arrowhead  = normal,color = "#000000"];
+ 5 -> 10 [ label = "No",arrowhead  = normal,color = "#000000"];
+ 6 -> 7 [ label = "Yes",arrowhead  = normal,color = "#000000"];
+ 6 -> 10 [ label = "No",arrowhead  = normal,color = "#000000"];
+ 7 -> 8 [ label = "",arrowhead  = normal,color = "#000000"];
+ 8 -> 9 [ label = "",arrowhead  = normal,color = "#000000"];
+ 9 -> 10 [ label = "",arrowhead  = normal,color = "#000000"];
+ 10 -> 18 [ label = "",arrowhead  = normal,color = "#000000"];
+ 18 -> 11 [ label = "",arrowhead  = normal,color = "#000000"];
+ 11 -> 12 [ label = "Yes",arrowhead  = normal,color = "#000000"];
+ 11 -> 15 [ label = "No",arrowhead  = normal,color = "#000000"];
+ 12 -> 13 [ label = "",arrowhead  = normal,color = "#000000"];
+ 13 -> 14 [ label = "",arrowhead  = normal,color = "#000000"];
+ 14 -> 15 [ label = "",arrowhead  = normal,color = "#000000"];
+ 15 -> 19 [ label = "",arrowhead  = normal,color = "#000000"];
+ 19 -> 16 [ label = "",arrowhead  = normal,color = "#000000"];
+ 16 -> 17 [ label = "",arrowhead  = normal,color = "#000000"];
+}
