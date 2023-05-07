@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>フローチャート試作品</title>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://unpkg.com/viz.js@1.8.0/viz.js" type="javascript/worker"></script>
+    <script src="https://unpkg.com/d3-graphviz@1.4.0/build/d3-graphviz.min.js"></script>
+</head>
+<body>
+    <div>
+        <input type="file" id="select-file" onchange="selectFile()" /><br />
+        <br>
+        <input type="button" onclick="Reload()" value="リセット">
+    </div>
+    <div id="graph2" style="text-align: center;"></div>
+    <script>
+
+        //　ノードと矢印の各値が格納されている配列
+        var nodeValues = [];
+        var arrowValues = []; 
+
+        function Reload(){
+            //ResetValues();
+            document.location.reload();
+        }
+        
+        function GetValueNode(node){
+            var nodeObj = {};
+
+            // 矢印の各要素を取得する
+            var nodeNum_val = String(node).match(/(\d+) \[/);
+            nodeObj["nodeNum"] = nodeNum_val[1];
+            var label_val = String(node).match(/label= "(.*)"shape/);
+            nodeObj["label"] = label_val[1];
+            var shape_val = String(node).match(/shape= (\w*)/);
+            nodeObj["shape"] = shape_val[1];
+            var style_val = String(node).match(/style= "(\w*),(\w*)"/);
+            nodeObj["style"] = style_val[1];
+            var fillcolor_val = String(node).match(/fillcolor= "#(\w*)"/);
+            nodeObj["fillcolor"] = fillcolor_val[1];
+            var color_val = String(node).match(/color= "#(\w*)"/);
+            nodeObj["color"] = color_val[1];
+            var width_val = String(node).match(/width= ([+-]?\d+(?:\.\d+)?)/);
+            nodeObj["width"] = width_val[1];
+            var height_val = String(node).match(/height= ([+-]?\d+(?:\.\d+)?)/);
+            nodeObj["height"] = height_val[1];
+
+            return nodeObj;
+        }
+
+        function GetValueArrow(arrow){
+            var arrowObj = {};
+
+            // 矢印の各要素を取得する
+            var arrowNum_val = String(arrow).match(/((\d+) -> (\d+))/);
+            arrowObj["arrowNum"] = arrowNum_val[1];
+            var label_val = String(arrow).match(/label = "(.*)",/);
+            arrowObj["label"] = label_val[1];
+            var arrowhead_val = String(arrow).match(/arrowhead  = (\w*),/);
+            arrowObj["arrowhead"] = arrowhead_val[1];
+            var color_val = String(arrow).match(/color = "#(\w*)"/);
+            arrowObj["color"] = color_val[1];
+
+            return arrowObj;
+        }
+
+        //　nodeのhtml表示変換
+        function dotToHtml_Nodes(nodes){
+            var nodes_html = [];
+            var i = 0;
+            for (const node of nodes) {
+
+                //　各値を取得
+                nodeValues[i] = GetValueNode(node);
+                console.log(nodeValues[i].nodeNum);
+                //　html表示のための書き換え処理(必要なかった)
+                //  どこかの機会で役に立つかも
+                var node_html = "'" + node.slice(0, -1) + "',";
+                //console.log(node_html);
+                nodes_html[i] = node_html
+                i++;
+            }
+            //console.log(nodes_html.join('\n'));
+            //return nodes_html;
+            return nodes_html;
+        }
+
+        //　arrowのhtml表示変換
+        function dotToHtml_Arrows(arrows){
+            var arrows_html = [];
+            var i = 0;
+            for (const arrow of arrows) {
+                //　各値を取得    
+                var arrowValues = [];      
+                arrowValues[i] = GetValueArrow(arrow);
+                console.log(arrowValues[i].arrowNum);
+                //　html表示のための書き換え処理(必要なかった)
+                //  どこかの機会で役に立つかも
+                var arrow_html = "'" + arrow.slice(0, -1) + "',";
+                //console.log(arrow_html);
+                arrows_html[i] = arrow_html;
+                i++;
+            }
+
+            //console.log(arrows_html.join('\n'));
+            return arrows_html;
+        }
+
+        function ResetValues(){
+            nodeValues = [];
+            arrowValues = []; 
+        }
+
+        const selectFile = () => {
+
+            //ResetValues();
+
+            // FileListオブジェクト取得
+            const selectFiles = document.querySelector("#select-file").files
+
+            // Fileオブジェクト取得
+            const file = selectFiles[0]
+
+            // FileReaderオブジェクト取得
+            const reader = new FileReader()
+            reader.readAsText(file)        
+
+            // ファイル読み込み完了時の処理
+            reader.onload = () => {
+                //　dotファイルからノードと矢印のdot記述を一つずつ配列で受け取る
+                var dot_nodes = reader.result.match(/[1-9][0-9]* \[label.*\];/g);
+                var dot_arrows = reader.result.match(/[1-9][0-9]* -> [1-9][0-9]* \[ label.*\];/g);
+
+                //console.log(dot_nodes.join('\n'));
+                //console.log(dot_arrows.join('\n'));
+
+                //　表示変換とノードと矢印の各値を取得
+                dotToHtml_Nodes(dot_nodes);
+                dotToHtml_Arrows(dot_arrows);
+
+                // 最終的に表示するdots配列の中身を作成
+                var dots = [[], ];
+                var i = 0, j = 0;
+
+                //　dots配列に挿入する
+                dots[0].push('digraph  {');
+
+                for (const node of dot_nodes) {
+                    dots[0].push(dot_nodes[i]);
+                    i++;
+                }
+                for (const arrow of dot_arrows) {
+                    dots[0].push(dot_arrows[j]);
+                    j++;
+                }
+                dots[0].push('}');
+
+                // dotファイルのアニメーション表示
+                var dotIndex = 0;
+                var graphviz = d3.select("#graph2").graphviz()
+                    .transition(function () {
+                        return d3.transition("main")
+                            .ease(d3.easeLinear)
+                            .delay(500)
+                            .duration(1500);
+                    })
+                    .on("initEnd", render);
+                
+                function render() {
+                    var dotLines = dots[dotIndex];
+                    var dot = dotLines.join('');
+                    graphviz
+                        .renderDot(dot)
+                        .on("end", function () {
+                            dotIndex = (dotIndex + 1) % dots.length;
+                            render();
+                        });
+                }
+            }
+
+            // ファイル読み込みエラー時の処理
+            reader.onerror = () => {
+            console.log("ファイル読み込みエラー")
+            }
+
+
+      }
+
+    
+    
+    </script>
+</body>
+</html>
